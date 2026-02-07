@@ -1,0 +1,18 @@
+[package]
+name = "rag_chat"
+version = "0.0.1"
+edition = "2024"
+authors = ["Robert Knight", "Mark Howe"]
+description = "RAG Chatbot"
+license = "MIT"
+homepage = "https://github.com/mvh-solutions/chat-rten"
+repository = "https://github.com/mvh-solutions/chat-rten"
+
+[dependencies]
+argh = "0.1.9"
+rten = { version = "0.24.0", features = ["all-ops", "mmap"] }
+rten-generate = { version = "0.24.0", features=["text-decoder"] }
+
+rten-text = { version = "0.24.0" }
+serde_json = "1.0.149"
+serde = { version = "1.0.228", features = ["derive"] }
