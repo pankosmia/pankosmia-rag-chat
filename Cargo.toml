@@ -1,18 +1,28 @@
 [package]
-name = "rag_chat"
+name = "pankosmia_rag_chat"
 version = "0.0.1"
 edition = "2024"
-authors = ["Robert Knight", "Mark Howe"]
-description = "RAG Chatbot"
+authors = ["Mark Howe"]
+description = "A RAG chatbot library, leveraging RTEN, for pankosmia desktop applications"
 license = "MIT"
-homepage = "https://github.com/mvh-solutions/chat-rten"
-repository = "https://github.com/mvh-solutions/chat-rten"
+homepage = "https://github.com/pankosmia/pankosmia-rag-chat"
+repository = "https://github.com/pankosmia/pankosmia-rag-chat"
+readme = "README.md"
+exclude = [
+    "doc/*"
+]
+
+[lib]
+crate-type = [
+    "lib"
+]
+path = "src/lib.rs"
 
 [dependencies]
 argh = "0.1.9"
 rten = { version = "0.24.0", features = ["all-ops", "mmap"] }
 rten-generate = { version = "0.24.0", features=["text-decoder"] }
-
 rten-text = { version = "0.24.0" }
 serde_json = "1.0.149"
 serde = { version = "1.0.228", features = ["derive"] }
+export-magic = "0.3.6"

@@ -113,6 +113,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
+name = "export-magic"
+version = "0.3.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed02add08ce10f7664f1567c72f195cec7e630a666a7a04a98a9633d402b02ba"
+
+[[package]]
 name = "fancy-regex"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -225,6 +231,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
+name = "pankosmia_rag_chat"
+version = "0.0.1"
+dependencies = [
+ "argh",
+ "export-magic",
+ "rten",
+ "rten-generate",
+ "rten-text",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "primal-check"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -249,18 +268,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "21b2ebcf727b7760c461f091f9f0f539b77b8e87f2fd88131e7f1b433b3cece4"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rag_chat"
-version = "0.0.1"
-dependencies = [
- "argh",
- "rten",
- "rten-generate",
- "rten-text",
- "serde",
- "serde_json",
 ]
 
 [[package]]

@@ -25,7 +25,7 @@ pub(crate) fn get_end_of_turn_tokens(tokenizer: &Tokenizer) -> Vec<TokenId> {
     end_of_turn_tokens
 }
 
-pub(crate) fn generator_from_model<'a>(
+pub fn generator_from_model<'a>(
     model: &'a Model,
     tokenizer: &'a Tokenizer,
     top_k: usize,
@@ -39,7 +39,7 @@ pub(crate) fn generator_from_model<'a>(
         .with_sampler(Multinomial::new())
 }
 
-pub(crate) fn do_one_iteration(
+pub fn do_one_iteration(
     generator: &mut Generator,
     tokenizer: &Tokenizer,
     rag_json: VerseContext,

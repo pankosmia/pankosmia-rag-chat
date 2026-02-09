@@ -3,22 +3,23 @@ use serde::{Deserialize, Serialize};
 use rten_text::{Tokenizer, TokenizerError};
 use crate::process::MessageChunk;
 
-pub(crate) struct ChatConfig {
-    pub(crate) model_path: String,
-    pub(crate) tokenizer_path: String,
-    pub(crate) temperature: f32,
-    pub(crate) top_k: usize,
-    pub(crate) keep_history: bool,
-    pub(crate) show_prompt: bool,
-    pub(crate) show_time: bool
+pub struct ChatConfig {
+    pub model_path: String,
+    pub tokenizer_path: String,
+    pub rag_json_path: String,
+    pub temperature: f32,
+    pub top_k: usize,
+    pub keep_history: bool,
+    pub show_prompt: bool,
+    pub show_time: bool
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub(crate) struct VerseContext {
-    pub(crate) juxta: String,
-    pub(crate) translations: BTreeMap<String, String>,
-    pub(crate) notes: BTreeMap<String, Vec<String>>,
-    pub(crate) snippets: BTreeMap<String, Vec<String>>,
+pub struct VerseContext {
+    pub juxta: String,
+    pub translations: BTreeMap<String, String>,
+    pub notes: BTreeMap<String, Vec<String>>,
+    pub snippets: BTreeMap<String, Vec<String>>,
 }
 
 pub(crate) fn encode_system_message(tokenizer: &Tokenizer) -> Result<Vec<u32>, TokenizerError> {
@@ -62,6 +63,7 @@ pub(crate) fn encode_message(
     }
     Ok(token_ids)
 }
+
 
 pub(crate) fn generate_user_prompt(
     _bcv: String,
