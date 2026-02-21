@@ -5,7 +5,7 @@ use rten_generate::{Generator, GeneratorUtils};
 use rten_text::{TokenId, Tokenizer};
 use std::error::Error;
 
-use crate::prompt::{encode_message, encode_system_message, generate_user_prompt, VerseContext};
+use crate::prompt::{VerseContext, encode_message, encode_system_message, generate_user_prompt};
 pub(crate) enum MessageChunk<'a> {
     Text(&'a str),
     Token(u32),
@@ -44,16 +44,19 @@ pub fn do_one_iteration(
     tokenizer: &Tokenizer,
     rag_json: VerseContext,
     user_input: String,
-    show_prompt: bool
+    show_prompt: bool,
 ) -> Result<Vec<String>, Box<dyn Error>> {
     let end_of_turn_tokens = get_end_of_turn_tokens(tokenizer);
 
-    let user_text =
-        generate_user_prompt("JHN 3:16".to_string(), "John 3:16".to_string(), rag_json, user_input);
+    let user_text = generate_user_prompt(
+        "JHN 3:16".to_string(),
+        "John 3:16".to_string(),
+        rag_json,
+        user_input,
+    );
     let token_ids = encode_message(&tokenizer, user_text.clone())?;
 
     generator.append_prompt(&token_ids);
-
     let decoder = generator
         .by_ref()
         .stop_on_tokens(&end_of_turn_tokens)
@@ -64,7 +67,7 @@ pub fn do_one_iteration(
     }
     for token in decoder {
         let token = token?;
-            tokens.push(format!("{}", token));
-        };
+        tokens.push(format!("{}", token));
+    }
     Ok(tokens)
 }
