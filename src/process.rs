@@ -42,6 +42,8 @@ pub fn generator_from_model<'a>(
 pub fn do_one_iteration(
     generator: &mut Generator,
     tokenizer: &Tokenizer,
+    bcv: String,
+    bcv_printable: String,
     rag_json: VerseContext,
     user_input: String,
     show_prompt: bool,
@@ -49,8 +51,8 @@ pub fn do_one_iteration(
     let end_of_turn_tokens = get_end_of_turn_tokens(tokenizer);
 
     let user_text = generate_user_prompt(
-        "JHN 3:16".to_string(),
-        "John 3:16".to_string(),
+        bcv.clone(),
+        bcv_printable.clone(),
         rag_json,
         user_input,
     );
