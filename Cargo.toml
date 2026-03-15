@@ -1,6 +1,6 @@
 [package]
 name = "pankosmia_rag_chat"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 authors = ["Mark Howe"]
 description = "A RAG chatbot library, leveraging RTEN, for pankosmia desktop applications"

@@ -30,8 +30,9 @@ pub fn generator_from_model<'a>(
     tokenizer: &'a Tokenizer,
     top_k: usize,
     temperature: f32,
+    system_prompt: String
 ) -> Generator<'a> {
-    let prompt = encode_system_message(tokenizer).expect("encode system message");
+    let prompt = encode_system_message(tokenizer, system_prompt).expect("encode system message");
     Generator::from_model(model)
         .expect("generator from model")
         .with_prompt(&prompt)

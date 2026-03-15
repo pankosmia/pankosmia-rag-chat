@@ -15,17 +15,29 @@ pub struct ChatConfig {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct VersePrompts {
+    pub system: String,
+    pub prologue: String,
+    pub user_prologue: String,
+    pub juxta: String,
+    pub notes: String,
+    pub snippets: String,
+    pub translations: String
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct VerseContext {
     pub juxta: String,
     pub translations: BTreeMap<String, String>,
     pub notes: BTreeMap<String, Vec<String>>,
     pub snippets: BTreeMap<String, Vec<String>>,
+    pub prompts: VersePrompts
 }
 
-pub(crate) fn encode_system_message(tokenizer: &Tokenizer) -> Result<Vec<u32>, TokenizerError> {
+pub(crate) fn encode_system_message(tokenizer: &Tokenizer, system_prompt: String) -> Result<Vec<u32>, TokenizerError> {
     encode_message(
         tokenizer,
-        "system\nYou are a helpful assistant. You speak English. The user is translating a verse in the Bible. She is translating from English, which she speaks fluently. However, she left school when she was 11 years old so her written English is limited. She likes to read short, precise answers. She likes answers that contain between one and three short paragraphs. She does not want to see the entire verse, only the parts of the verse that are relevant to the question.".to_string()
+        format!("system\n{}", &system_prompt)
     )
 }
 pub(crate) fn encode_message(
@@ -78,7 +90,7 @@ pub(crate) fn generate_user_prompt(
     let translation_context: String = translation_contexts.into_iter().collect();
     let translations_prompt;
     if translation_context.len() > 0 {
-        translations_prompt = format!("# English Bible Translations\n\nHere are different English Bible translations of the same verse. These are important. Pay attention to the names of the translations, and to the differences between the translations for this verse.\n\n{}\n\n", translation_context);
+        translations_prompt = format!("{}{}\n\n", &rag_json.prompts.translations, translation_context);
     } else {
         translations_prompt = "".to_string();
     }
@@ -87,7 +99,7 @@ pub(crate) fn generate_user_prompt(
     let juxta_context = rag_json.juxta.clone();
     let juxta_prompt;
     if juxta_context.len() > 0 {
-        juxta_prompt = format!("# Juxtalinear Translation\n\n{}\n\n", juxta_context);
+        juxta_prompt = format!("{}\n\n{}\n\n", &rag_json.prompts.juxta, juxta_context);
     } else {
         juxta_prompt = "".to_string();
     }
@@ -109,7 +121,7 @@ pub(crate) fn generate_user_prompt(
     let note_context: String = note_contexts.into_iter().collect();
     let note_prompt;
     if note_context.len() > 0 {
-        note_prompt = format!("# Verse notes\n\nHere are some notes on the whole verse. These are NOT Bible translations. The notes apply to ALL Bible translations. These notes help us to understand the Bible translations.\n\n{}\n\n", &note_context);
+        note_prompt = format!("{}{}\n\n",&rag_json.prompts.notes, &note_context);
     } else {
         note_prompt = "".to_string();
     }
@@ -131,17 +143,19 @@ pub(crate) fn generate_user_prompt(
     let snippet_context: String = snippet_contexts.into_iter().collect();
     let snippet_prompt;
     if snippet_context.len() > 0 {
-        snippet_prompt = format!("# Notes on key words in the verse\n\nHere are some notes on important words in this verse. These notes are also NOT Bible translations. They refer to the unfoldingWord Literal Translation, but may be applied to other Bible translations.\n\n{}\n\n", &snippet_context);
+        snippet_prompt = format!("{}\n{}\n\n", &rag_json.prompts.snippets, &snippet_context);
     } else {
         snippet_prompt = "".to_string();
     }
 
     format!(
-        "# Source Documents\n\nHere are some important documents. You should base your answer to her questions on these documents.\n\n{}{}{}{}# The user's question\n\nNow answer the following question, in English, using only the documents above.\n\n**{}**",
+        "{}\n\n{}{}{}{}{}\n\n**{}**",
+        &rag_json.prompts.prologue,
         &juxta_prompt,
         &translations_prompt,
         &note_prompt,
         &snippet_prompt,
+        &rag_json.prompts.user_prologue,
         &user_input.trim()
     )
 }
